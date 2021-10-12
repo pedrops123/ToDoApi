@@ -1,4 +1,4 @@
-############ WEB API - TO DO #############
+ # WEB API - TO DO 
 
 Tecnologias utilizadas :
 
@@ -7,7 +7,7 @@ Tecnologias utilizadas :
 * Entity Framework Core
 * Entity Framework Design
 * Entity Framework Sqlite
-
+* Swagger
 
 # INSTRUÇÃO DE USO:
 
