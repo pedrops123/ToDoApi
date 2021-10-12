@@ -13,7 +13,7 @@ namespace todoApi.DAO
     ///<summary>
     /// Classe DAO TODO
     ///</summary>
-    public class ToDoDAO : IToDoDAO<RetornoDynamic<TodoSchema>, RetornoDynamic<List<TodoSchema>>,CreateTodoCommand,TodoSchema>
+    public class ToDoDAO : IToDoDAO<RetornoDynamicApp<TodoSchema>, RetornoDynamicApp<List<TodoSchema>>,CreateTodoCommand,TodoSchema>
     {
         private AppDbContext Context;
 
@@ -25,17 +25,23 @@ namespace todoApi.DAO
             Context = new AppDbContext();    
         }
 
-/**/
-        public RetornoDynamic<TodoSchema> Delete(int Id)
+
+        public RetornoDynamicApp<TodoSchema> Delete(int Id)
         {
-            RetornoDynamic<TodoSchema> ret = new RetornoDynamic<TodoSchema>();
+            RetornoDynamicApp<TodoSchema> ret = new RetornoDynamicApp<TodoSchema>();
             try
             {
                 if(Id != 0){
                     var register = Context.TodoTable.Where(r=>r.Id == Id).FirstOrDefault();
-                    Context.TodoTable.Remove(register);
-                    Context.SaveChanges();
-                    ret.Retorno = register;
+                    if(register != null){
+                        Context.TodoTable.Remove(register);
+                        Context.SaveChanges();
+                        ret.Retorno = register;
+                    }
+                    else 
+                    {
+                        ret.errors.Add("Registro nao encontrado !");
+                    }
                 }
                 else
                 {
@@ -49,9 +55,9 @@ namespace todoApi.DAO
             }
         }
 
-        public RetornoDynamic<List<TodoSchema>> Get()
+        public RetornoDynamicApp<List<TodoSchema>> Get()
         {
-            RetornoDynamic<List<TodoSchema>> ret = new RetornoDynamic<List<TodoSchema>>();
+            RetornoDynamicApp<List<TodoSchema>> ret = new RetornoDynamicApp<List<TodoSchema>>();
            try
            {
                ret.Retorno = Context.TodoTable.ToList(); 
@@ -65,9 +71,9 @@ namespace todoApi.DAO
            return ret;
         }
 
-        public RetornoDynamic<TodoSchema> GetById(int Id)
+        public RetornoDynamicApp<TodoSchema> GetById(int Id)
         {
-            RetornoDynamic<TodoSchema> ret = new RetornoDynamic<TodoSchema>();
+            RetornoDynamicApp<TodoSchema> ret = new RetornoDynamicApp<TodoSchema>();
             try
             {
                 if(Id != 0){
@@ -87,9 +93,9 @@ namespace todoApi.DAO
             return ret;
         }
 
-        public RetornoDynamic<TodoSchema> Post(CreateTodoCommand PostItem)
+        public RetornoDynamicApp<TodoSchema> Post(CreateTodoCommand PostItem)
         {
-            RetornoDynamic<TodoSchema> ret = new RetornoDynamic<TodoSchema>();
+            RetornoDynamicApp<TodoSchema> ret = new RetornoDynamicApp<TodoSchema>();
             try
             {
                 CreateTodoValidator validator = new CreateTodoValidator();
@@ -114,9 +120,9 @@ namespace todoApi.DAO
             return ret;
         }
 
-        public RetornoDynamic<TodoSchema> Put(TodoSchema PutItem)
+        public RetornoDynamicApp<TodoSchema> Put(TodoSchema PutItem)
         {
-            RetornoDynamic<TodoSchema> ret = new RetornoDynamic<TodoSchema>();
+            RetornoDynamicApp<TodoSchema> ret = new RetornoDynamicApp<TodoSchema>();
             try
             {
                 UpdateTodoValidator validator = new UpdateTodoValidator();

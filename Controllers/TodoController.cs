@@ -13,7 +13,7 @@ namespace todoApi.Controllers
     ///</summary>
     [ApiController]
     [Route("v1/[controller]")]
-    public class TodoController : ControllerBase, IToDoDAO<RetornoDynamic<TodoSchema>, RetornoDynamic<List<TodoSchema>>,CreateTodoCommand,TodoSchema>
+    public class TodoController : ControllerBase, IToDoDAO<RetornoDynamicApp<TodoSchema>, RetornoDynamicApp<List<TodoSchema>>,CreateTodoCommand,TodoSchema>
     {
         private ToDoDAO _DAO;
 
@@ -23,30 +23,30 @@ namespace todoApi.Controllers
         public TodoController() => _DAO = new ToDoDAO(); 
         
         ///<summary>
-        /// End Point Deleçao 
+        /// End Point  Deleçao 
         ///</summary>
         [HttpDelete("{Id}")]
-        public RetornoDynamic<TodoSchema> Delete(int Id) => _DAO.Delete(Id);
+        public RetornoDynamicApp<TodoSchema> Delete(int Id) => _DAO.Delete(Id);
         ///<summary>
         /// End Point Listagem geral
         ///</summary>
         [HttpGet]
-        public RetornoDynamic<List<TodoSchema>> Get() => _DAO.Get();
+        public RetornoDynamicApp<List<TodoSchema>> Get() => _DAO.Get();
         ///<summary>
-        /// End Point Por Id
+        /// End Point Listagem Por Id
         ///</summary>
         [HttpGet("{Id}")]
-        public RetornoDynamic<TodoSchema> GetById(int Id) => _DAO.GetById(Id);
+        public RetornoDynamicApp<TodoSchema> GetById(int Id) => _DAO.GetById(Id);
         ///<summary>
         /// End Point Cadastro Novo
         ///</summary>
         [HttpPost]
-        public RetornoDynamic<TodoSchema> Post(CreateTodoCommand PostItem) => _DAO.Post(PostItem);
+        public RetornoDynamicApp<TodoSchema> Post(CreateTodoCommand PostItem) => _DAO.Post(PostItem);
         ///<summary>
         /// End Point Atualização Cadastro
         ///</summary>
         [HttpPut]
-        public RetornoDynamic<TodoSchema> Put(TodoSchema PutItem) => _DAO.Put(PutItem);
+        public RetornoDynamicApp<TodoSchema> Put(TodoSchema PutItem) => _DAO.Put(PutItem);
     }
 
 }
