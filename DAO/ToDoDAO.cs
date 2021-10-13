@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using todoApi.Commands;
 using todoApi.Data;
 using todoApi.interfaces;
@@ -20,13 +23,10 @@ namespace todoApi.DAO
         ///<summary>
         /// Construtor da classe
         ///</summary>
-        public ToDoDAO()
-        {
-            Context = new AppDbContext();    
-        }
+        public ToDoDAO(AppDbContext _context) => Context = _context;    
+        
 
-
-        public RetornoDynamicApp<TodoSchema> Delete(int Id)
+        public async Task<RetornoDynamicApp<TodoSchema>> Delete(int Id)
         {
             RetornoDynamicApp<TodoSchema> ret = new RetornoDynamicApp<TodoSchema>();
             try
@@ -35,7 +35,7 @@ namespace todoApi.DAO
                     var register = Context.TodoTable.Where(r=>r.Id == Id).FirstOrDefault();
                     if(register != null){
                         Context.TodoTable.Remove(register);
-                        Context.SaveChanges();
+                        await Context.SaveChangesAsync();
                         ret.Retorno = register;
                     }
                     else 
@@ -55,7 +55,7 @@ namespace todoApi.DAO
             }
         }
 
-        public RetornoDynamicApp<List<TodoSchema>> Get()
+        public async Task<RetornoDynamicApp<List<TodoSchema>>> Get()
         {
             RetornoDynamicApp<List<TodoSchema>> ret = new RetornoDynamicApp<List<TodoSchema>>();
            try
@@ -64,21 +64,21 @@ namespace todoApi.DAO
            }
            catch (Exception e)
            {
-               
                throw e;
            }
 
            return ret;
         }
 
-        public RetornoDynamicApp<TodoSchema> GetById(int Id)
+        public async Task<RetornoDynamicApp<TodoSchema>> GetById(int Id)
         {
             RetornoDynamicApp<TodoSchema> ret = new RetornoDynamicApp<TodoSchema>();
             try
             {
                 if(Id != 0){
-                    ret.Retorno = Context.TodoTable.Where(r=>r.Id == Id).FirstOrDefault();
-                    return  ret;
+                    ret.Retorno = await Context.TodoTable.Where(r => r.Id == Id).FirstOrDefaultAsync();
+                    
+                    return   ret;
                 }
                 else
                 {
@@ -93,7 +93,7 @@ namespace todoApi.DAO
             return ret;
         }
 
-        public RetornoDynamicApp<TodoSchema> Post(CreateTodoCommand PostItem)
+        public async Task<RetornoDynamicApp<TodoSchema>> Post(CreateTodoCommand PostItem)
         {
             RetornoDynamicApp<TodoSchema> ret = new RetornoDynamicApp<TodoSchema>();
             try
@@ -105,8 +105,8 @@ namespace todoApi.DAO
                             Name = PostItem.Name,
                             Done = PostItem.Done 
                         };
-                 Context.TodoTable.Add(NewTodo);
-                 Context.SaveChanges();
+                 await Context.TodoTable.AddAsync(NewTodo);
+                 await Context.SaveChangesAsync();
                  ret.Retorno = NewTodo;                    
                 }
                 else {
@@ -120,7 +120,7 @@ namespace todoApi.DAO
             return ret;
         }
 
-        public RetornoDynamicApp<TodoSchema> Put(TodoSchema PutItem)
+        public async Task<RetornoDynamicApp<TodoSchema>> Put(TodoSchema PutItem)
         {
             RetornoDynamicApp<TodoSchema> ret = new RetornoDynamicApp<TodoSchema>();
             try
@@ -129,7 +129,7 @@ namespace todoApi.DAO
                 var validacao = validator.Validate(PutItem);
                 if(validacao.IsValid){
                     Context.TodoTable.Update(PutItem);
-                    Context.SaveChanges();
+                    await Context.SaveChangesAsync();
                     ret.Retorno = PutItem;
                 }
                 else
@@ -141,7 +141,7 @@ namespace todoApi.DAO
             {
                 throw e;
             }
-            return ret;
+            return  ret;
         }
 
 
